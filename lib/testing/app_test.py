@@ -4,6 +4,7 @@ from os import path
 import runpy
 import io
 import sys
+import subprocess
 
 class TestAppPy:
     '''
@@ -25,8 +26,5 @@ class TestAppPy:
         '''
         prints "Hello World! Pass this test, please."
         '''
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        runpy.run_path("lib/app.py")
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Hello World! Pass this test, please.\n")
+        result = subprocess.run([sys.executable, "lib/app.py"], capture_output=True, text=True)
+        assert(result.stdout == "Hello World! Pass this test, please.\n")
